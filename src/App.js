@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
-function App() {
+import Home from "./pages/Home";
+import DashboardPage from "./pages/DashboardPage";
+import PricingPage from "./pages/Pricing";
+import SmartWriterPage from "./pages/SmartWritePage"; 
+import NotFound from "./pages/NotFound";
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/smart-writer" element={<SmartWriterPage />} /> 
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
-}
+};
+
+const navStyle = {
+  padding: "20px",
+  backgroundColor: "#f3f4f6",
+  display: "flex",
+  gap: "20px",
+  borderBottom: "1px solid #e5e7eb",
+};
+
+const linkStyle = {
+  textDecoration: "none",
+  fontWeight: "500",
+  color: "#3b82f6",
+};
 
 export default App;

@@ -1,0 +1,87 @@
+.faq-container {
+  background-color: #f5f9fc;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  color: #000; /* Mặc định chữ màu đen */
+}
+
+.faq-main {
+  max-width: 36rem;
+  width: 100%;
+  text-align: center;
+}
+
+.faq-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #000; /* Đổi từ #4f7cf3 -> #000 */
+  margin-bottom: 0.5rem;
+  user-select: none;
+}
+
+.faq-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #000; /* Đổi từ #1f2937 -> #000 */
+  margin-bottom: 0.25rem;
+  user-select: none;
+}
+
+.faq-description {
+  font-size: 0.875rem;
+  color: #000; /* Đổi từ #374151 -> #000 */
+  margin-bottom: 2rem;
+  user-select: none;
+}
+
+.faq-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.faq-item {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.faq-summary {
+  font-weight: 600;
+  padding: 1rem;
+  list-style: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #000;
+}
+
+.faq-icon {
+  font-size: 10px;
+}
+
+.faq-footer {
+  background-color: #f3f6fb;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  margin-top: 2.5rem;
+  font-size: 0.75rem;
+  color: #000; /* Đổi từ #6b7280 -> #000 */
+  user-select: none;
+}
+
+.faq-footer a {
+  font-weight: 600;
+  color: #000; /* Đổi từ #2563eb -> #000 */
+  text-decoration: none;
+}
+
+.faq-footer a:hover {
+  text-decoration: underline;
+}

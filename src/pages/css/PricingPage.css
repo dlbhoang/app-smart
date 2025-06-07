@@ -1,0 +1,9 @@
+/* PricingPage.css */
+
+.pricing-page-wrapper {
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #fff;
+}
