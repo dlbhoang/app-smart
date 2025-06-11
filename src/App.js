@@ -19,7 +19,6 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/disclaimer" element={<DisclaimerPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-
       </Routes>
     </Router>
   );

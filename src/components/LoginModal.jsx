@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./css/loginModal.css";
-import { FcGoogle } from "react-icons/fc"; // Google icon
+import { FcGoogle } from "react-icons/fc";
 
 const LoginModal = ({ onClose }) => {
   const [isRegister, setIsRegister] = useState(false);
@@ -62,26 +62,36 @@ const LoginModal = ({ onClose }) => {
               <input type="text" placeholder="Nhập họ tên" required />
             </label>
           )}
+
           <label>
-            Email
-            <input type="email" placeholder="Nhập email" required />
+            Email 
+            <input type="text" placeholder="Nhập email" required />
           </label>
+
           <label>
             Mật khẩu
             <input type="password" placeholder="Nhập mật khẩu" required />
           </label>
+
           {isRegister && (
-            <label>
-              Xác nhận mật khẩu
-              <input type="password" placeholder="Nhập lại mật khẩu" required />
-            </label>
+            <>
+              <label>
+                Số điện thoại
+                <input type="tel" placeholder="Nhập số điện thoại" required />
+              </label>
+              <label>
+                Xác nhận mật khẩu
+                <input type="password" placeholder="Nhập lại mật khẩu" required />
+              </label>
+            
+            </>
           )}
+
           <button type="submit" className="submit-btn">
             {isRegister ? "Đăng ký" : "Đăng nhập"}
           </button>
         </form>
 
-        {/* Google login button */}
         <button className="google-login-btn" onClick={handleGoogleLogin}>
           <FcGoogle size={20} style={{ marginRight: 8 }} />
           Đăng nhập bằng Google

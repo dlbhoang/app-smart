@@ -10,13 +10,6 @@ const Header = () => {
 
   const menuItems = [
     { id: "smart-writer", label: "AI WRITER" },
-    { id: "rewriter", label: "AI REWRITER" },
-    { id: "editor", label: "AI EDITOR" },
-    { id: "chat", label: "AI CHAT" },
-    { id: "detector", label: "AI DETECTOR" },
-    { id: "optimize", label: "AI OPTIMIZE" },
-    { id: "tts", label: "AI TTS" },
-    { id: "tools", label: "TOOLS" },
     { id: "pricing", label: "BẢNG GIÁ" },
     { id: "guide", label: "HƯỚNG DẪN" },
   ];

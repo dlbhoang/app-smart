@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./css/Pricing.css";
 
 const pricingData = {
@@ -11,6 +11,7 @@ const pricingData = {
       posts: "0",
       keywordTools: "✔️",
       seoTools: "",
+      payUrl: "#",
     },
     {
       name: "Starter",
@@ -20,6 +21,7 @@ const pricingData = {
       posts: "60",
       keywordTools: "Unlimited",
       seoTools: "✔️",
+      payUrl: "#",
     },
     {
       name: "Grow",
@@ -29,6 +31,7 @@ const pricingData = {
       posts: "150",
       keywordTools: "Unlimited",
       seoTools: "✔️",
+      payUrl: "#",
     },
     {
       name: "Pro",
@@ -38,6 +41,7 @@ const pricingData = {
       posts: "300",
       keywordTools: "Unlimited",
       seoTools: "✔️",
+      payUrl: "#",
     },
     {
       name: "Corp",
@@ -47,6 +51,7 @@ const pricingData = {
       posts: "600",
       keywordTools: "Unlimited",
       seoTools: "✔️",
+      payUrl: "#",
     },
   ],
   features: [
@@ -69,6 +74,19 @@ const pricingData = {
 };
 
 const Pricing = () => {
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
+  const openDialog = (plan) => {
+    setSelectedPlan(plan);
+    setShowDialog(true);
+  };
+
+  const closeDialog = () => {
+    setShowDialog(false);
+    setSelectedPlan(null);
+  };
+
   return (
     <div className="pricing-table">
       <div className="table-header">
@@ -78,6 +96,9 @@ const Pricing = () => {
             <div className="plan-name">{plan.name}</div>
             <div className="plan-price">{plan.price}</div>
             <div className="plan-vnd">{plan.vnd}</div>
+            <button className="pay-button" onClick={() => openDialog(plan)}>
+              {plan.name === "Free" ? "Bắt đầu miễn phí" : "Thanh toán"}
+            </button>
           </div>
         ))}
       </div>
@@ -120,6 +141,37 @@ const Pricing = () => {
           ))}
         </div>
       ))}
+
+      {/* Payment Dialog */}
+      {showDialog && selectedPlan && (
+        <div className="dialog-overlay">
+          <div className="dialog payment-dialog">
+            <h3>Hiện tại bạn đang có <strong>0</strong> bài chưa viết</h3>
+            <p>Vui lòng sử dụng hết trước khi nâng cấp gói</p>
+
+            <div className="payment-options">
+              <div className="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/vi/thumb/4/49/ACB_logo.svg/1200px-ACB_logo.svg.png" alt="ACB" />
+                <span>Thanh toán qua chuyển khoản</span>
+              </div>
+              <div className="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="Momo" />
+                <span>Thanh toán qua MOMO</span>
+              </div>
+              <div className="payment-option">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="Paypal" />
+                <span>Thanh toán qua paypal.com</span>
+              </div>
+              <div className="payment-option">
+                <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=032" alt="USDT" />
+                <span>Payment via USDT/TRC20</span>
+              </div>
+            </div>
+
+            <button onClick={closeDialog} className="close-button">Đóng</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

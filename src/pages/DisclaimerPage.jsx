@@ -11,7 +11,7 @@ const DisclaimerPage = () => {
         <h1 style={styles.title}>Miễn Trừ Trách Nhiệm</h1>
 
         <Section title="Chấp Nhận Điều Kiện Sử Dụng">
-          Việc sử dụng trang web <strong>aiktp.com</strong> (sau đây gọi là "Website") của bạn bao gồm việc đồng ý và chấp nhận mọi điều khoản và điều kiện được nêu dưới đây.
+          Việc sử dụng trang web <strong>aicontent</strong> (sau đây gọi là "Website") của bạn bao gồm việc đồng ý và chấp nhận mọi điều khoản và điều kiện được nêu dưới đây.
         </Section>
 
         <Section title="Dịch Vụ Tạo Nội Dung Bằng Trí Tuệ Nhân Tạo (AI)">
@@ -54,9 +54,13 @@ const DisclaimerPage = () => {
           Chúng tôi không chịu trách nhiệm về nội dung hoặc chính xác của các trang web này và không hỗ trợ hoặc chấp nhận trách nhiệm về bất kỳ tổn thất hoặc thiệt hại nào do việc sử dụng chúng.
         </Section>
 
+        <Section title="Không Sử Dụng Trái Pháp Luật">
+          Trang web của chúng tôi không được sử dụng vào mục đích trái pháp luật. Nếu phát hiện vi phạm, chúng tôi có quyền ngưng tài khoản sử dụng dịch vụ và không hoàn tiền.
+        </Section>
+
         <Section title="Liên Hệ">
           Nếu có bất kỳ câu hỏi hoặc đề xuất nào về miễn trừ trách nhiệm này, vui lòng liên hệ với chúng tôi qua email:{" "}
-          <a href="mailto:hello@aiktp.com" style={styles.link}>hello@aiktp.com</a>.
+          <a href="mailto:hello@aicontent.com" style={styles.link}>hello@aicontent.com</a>.
         </Section>
       </div>
       <Footer />
@@ -67,47 +71,49 @@ const DisclaimerPage = () => {
 const Section = ({ title, children }) => (
   <div style={styles.section}>
     <h2 style={styles.sectionTitle}>{title}</h2>
-    <p style={styles.paragraph}>{children}</p>
+    <div style={styles.paragraph}>{children}</div>
   </div>
 );
 
 const styles = {
   container: {
-    maxWidth: "900px",
-    margin: "40px auto",
-    padding: "40px 30px",
-    backgroundColor: "#fefefe",
-    borderRadius: "16px",
-    boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+    maxWidth: "960px",
+    margin: "60px auto",
+    padding: "0 24px",
     fontFamily: "'Segoe UI', sans-serif",
-    color: "#2f2f2f",
-    lineHeight: 1.8,
+    color: "#2d3748",
   },
   title: {
-    fontSize: "32px",
-    marginBottom: "32px",
-    fontWeight: "bold",
+    fontSize: "40px",
+    fontWeight: "700",
     textAlign: "center",
+    marginBottom: "48px",
     color: "#1a202c",
   },
   section: {
-    marginBottom: "32px",
-    borderBottom: "1px solid #e2e8f0",
-    paddingBottom: "24px",
+    backgroundColor: "#ffffff",
+    padding: "28px 32px",
+    borderRadius: "12px",
+    marginBottom: "28px",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
+    border: "1px solid #e2e8f0",
   },
   sectionTitle: {
-    fontSize: "22px",
+    fontSize: "20px",
     marginBottom: "12px",
-    color: "#2c5282",
+    color: "#2b6cb0",
+    fontWeight: "600",
   },
   paragraph: {
     fontSize: "16px",
     color: "#4a5568",
+    lineHeight: 1.7,
   },
   link: {
-    color: "#3182ce",
-    textDecoration: "none",
+    color: "#2b6cb0",
+    textDecoration: "underline",
     fontWeight: "500",
+    transition: "color 0.3s",
   },
 };
 
