@@ -151,21 +151,14 @@ const Pricing = () => {
 
             <div className="payment-options">
               <div className="payment-option">
-                <img src="https://upload.wikimedia.org/wikipedia/vi/thumb/4/49/ACB_logo.svg/1200px-ACB_logo.svg.png" alt="ACB" />
+                <img src="https://upanh.vector6.com/images/2020/04/24/025-Logo-PNG-FILE-NganHang-TP-Bank.jpg" alt="TpBank" />
                 <span>Thanh toán qua chuyển khoản</span>
               </div>
               <div className="payment-option">
                 <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="Momo" />
                 <span>Thanh toán qua MOMO</span>
               </div>
-              <div className="payment-option">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="Paypal" />
-                <span>Thanh toán qua paypal.com</span>
-              </div>
-              <div className="payment-option">
-                <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=032" alt="USDT" />
-                <span>Payment via USDT/TRC20</span>
-              </div>
+             
             </div>
 
             <button onClick={closeDialog} className="close-button">Đóng</button>
