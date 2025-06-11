@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import "./css/header.css";
-import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const location = useLocation();
-  const [activeIndex, setActiveIndex] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const navigate = useNavigate();
 
@@ -23,35 +21,35 @@ const Header = () => {
     { id: "guide", label: "HƯỚNG DẪN" },
   ];
 
-
-   const handleLogoClick = () => {
-    navigate('/');
+  const handleLogoClick = () => {
+    navigate("/");
   };
+
   return (
     <>
-      <header className="header">
-        <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-      <span className="logo-text">AIContent</span>
-    </div>
+      <header className="custom-header">
+        <div className="logo" onClick={handleLogoClick}>
+          <span className="logo-text">
+            <span className="ai">AI</span>Content
+          </span>
+        </div>
 
-        <ul className="nav">
-          {menuItems.map(({ id, label }, index) => {
-            const [part1, part2] = label.split(" ");
+        <nav className="nav">
+          {menuItems.map(({ id, label }) => {
             const isActive = location.pathname === `/${id}`;
+            const [first, ...rest] = label.split(" ");
+            const second = rest.join(" ");
             return (
-              <li key={id}>
-                <Link
-                  to={`/${id}`}
-                  className={isActive ? "active" : ""}
-                  onClick={() => setActiveIndex(index)}
-                >
-                  {part1}
-                  {part2 ? <span className="blue"> {part2}</span> : ""}
-                </Link>
-              </li>
+              <Link
+                key={id}
+                to={`/${id}`}
+                className={`nav-link ${isActive ? "active" : ""}`}
+              >
+                {first} {second && <span className="highlight"> {second}</span>}
+              </Link>
             );
           })}
-        </ul>
+        </nav>
 
         <button className="login-btn" onClick={() => setShowLoginModal(true)}>
           Đăng nhập

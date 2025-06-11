@@ -1,0 +1,80 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #4b5563;
+  padding: 20px 40px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-links,
+.footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.footer-links a,
+.footer-meta span {
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.footer-icons {
+  display: flex;
+  gap: 12px;
+}
+
+.footer-icons a {
+  font-size: 18px;
+  color: #6b7280;
+  transition: opacity 0.2s ease;
+}
+
+.footer-icons a:hover {
+  opacity: 1;
+  color: #374151;
+}
+
+.lang-button {
+  border: 1px solid #9ca3af;
+  background: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #4b5563;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.lang-button:hover {
+  background-color: #f3f4f6;
+}
+
+.globe-icon {
+  font-size: 14px;
+}

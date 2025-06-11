@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./css/loginModal.css";
+import { FcGoogle } from "react-icons/fc"; // Google icon
 
 const LoginModal = ({ onClose }) => {
   const [isRegister, setIsRegister] = useState(false);
@@ -11,6 +12,11 @@ const LoginModal = ({ onClose }) => {
     } else {
       alert("Đăng nhập thành công (giả lập)!");
     }
+    onClose();
+  };
+
+  const handleGoogleLogin = () => {
+    alert("Đăng nhập bằng Google (giả lập)!");
     onClose();
   };
 
@@ -74,6 +80,12 @@ const LoginModal = ({ onClose }) => {
             {isRegister ? "Đăng ký" : "Đăng nhập"}
           </button>
         </form>
+
+        {/* Google login button */}
+        <button className="google-login-btn" onClick={handleGoogleLogin}>
+          <FcGoogle size={20} style={{ marginRight: 8 }} />
+          Đăng nhập bằng Google
+        </button>
       </div>
     </div>
   );
