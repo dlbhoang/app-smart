@@ -1,9 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const StepSix = ({ keyword, onNext }) => {
+const StepSix = ({ keyword = "trí tuệ nhân tạo", onNext }) => {
   const [option, setOption] = useState("skip");
 
+  useEffect(() => {
+    const saved = localStorage.getItem("ai_writer_data");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.semantic_option) {
+        setOption(parsed.semantic_option);
+      }
+    }
+  }, []);
+
   const handleNextClick = () => {
+    const saved = localStorage.getItem("ai_writer_data");
+    const parsed = saved ? JSON.parse(saved) : {};
+    const updated = {
+      ...parsed,
+      semantic_option: option,
+    };
+    localStorage.setItem("ai_writer_data", JSON.stringify(updated));
+    console.log("📦 LocalStorage sau Bước 6:", updated);
     onNext(option);
   };
 
@@ -49,7 +67,7 @@ const StepSix = ({ keyword, onNext }) => {
           >
             Bước 6
           </span>
-          Thêm Semantic Keywords, cải thiện chỉ số EEAT{" "}
+          Thêm Semantic Keywords, cải thiện chỉ số EEAT
           <a href="#" style={{ color: "#2563eb", fontSize: 14, marginLeft: 8 }}>
             (Hướng dẫn)
           </a>
@@ -137,10 +155,7 @@ const StepSix = ({ keyword, onNext }) => {
             gap: 6,
           }}
         >
-          Tiếp tục{" "}
-          <span style={{ display: "inline-block", animation: "spin 1s linear infinite" }}>
-            ✨
-          </span>
+          Tiếp tục <span style={{ display: "inline-block" }}>✨</span>
         </button>
       </div>
     </div>

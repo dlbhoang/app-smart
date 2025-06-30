@@ -2,17 +2,81 @@ import React, { useState } from "react";
 import "./css/loginModal.css";
 import { FcGoogle } from "react-icons/fc";
 
-const LoginModal = ({ onClose }) => {
+const LoginModal = ({ onClose, setUser }) => {
   const [isRegister, setIsRegister] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+  });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const BASE_URL = "https://server-hxhc.onrender.com";
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isRegister) {
-      alert("Đăng ký thành công (giả lập)!");
-    } else {
-      alert("Đăng nhập thành công (giả lập)!");
+
+    if (isRegister && form.password !== form.confirmPassword) {
+      alert("Mật khẩu không khớp!");
+      return;
     }
-    onClose();
+
+    setLoading(true);
+
+    const url = isRegister
+      ? `${BASE_URL}/api/auth/register`
+      : `${BASE_URL}/api/auth/login`;
+
+    const payload = isRegister
+      ? {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          phone: form.phone,
+        }
+      : {
+          email: form.email,
+          password: form.password,
+        };
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Đã xảy ra lỗi!");
+        return;
+      }
+
+      alert(data.message);
+
+      if (!isRegister) {
+        // ✅ Lưu token và user vào localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setUser(data.user); // ✅ Cập nhật user cho Header
+      }
+
+      onClose(); // đóng modal
+    } catch (error) {
+      alert("Lỗi kết nối tới server!");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -29,11 +93,7 @@ const LoginModal = ({ onClose }) => {
         aria-modal="true"
         aria-labelledby="login-modal-title"
       >
-        <button
-          className="close-btn"
-          onClick={onClose}
-          aria-label="Đóng modal"
-        >
+        <button className="close-btn" onClick={onClose} aria-label="Đóng modal">
           ×
         </button>
         <h2 id="login-modal-title">
@@ -59,36 +119,74 @@ const LoginModal = ({ onClose }) => {
           {isRegister && (
             <label>
               Họ và tên
-              <input type="text" placeholder="Nhập họ tên" required />
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Nhập họ tên"
+                required
+              />
             </label>
           )}
 
           <label>
-            Email 
-            <input type="text" placeholder="Nhập email" required />
+            Email
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Nhập email"
+              required
+            />
           </label>
 
           <label>
             Mật khẩu
-            <input type="password" placeholder="Nhập mật khẩu" required />
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Nhập mật khẩu"
+              required
+            />
           </label>
 
           {isRegister && (
             <>
               <label>
                 Số điện thoại
-                <input type="tel" placeholder="Nhập số điện thoại" required />
+                <input
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  placeholder="Nhập số điện thoại"
+                  required
+                />
               </label>
               <label>
                 Xác nhận mật khẩu
-                <input type="password" placeholder="Nhập lại mật khẩu" required />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Nhập lại mật khẩu"
+                  required
+                />
               </label>
-            
             </>
           )}
 
-          <button type="submit" className="submit-btn">
-            {isRegister ? "Đăng ký" : "Đăng nhập"}
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading
+              ? "Đang xử lý..."
+              : isRegister
+              ? "Đăng ký"
+              : "Đăng nhập"}
           </button>
         </form>
 

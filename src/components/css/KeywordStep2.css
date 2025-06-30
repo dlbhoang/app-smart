@@ -1,0 +1,102 @@
+.step-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.step-box {
+  max-width: 600px;
+  width: 100%;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.step-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 20px;
+}
+
+.highlight {
+  color: #2563eb;
+}
+
+.step-label {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #374151;
+}
+
+.step-description {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #4b5563;
+}
+
+.step-subheading {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 14px;
+}
+
+.step-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 16px;
+  color: #374151;
+}
+
+.step-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.step-option input {
+  width: 18px;
+  height: 18px;
+}
+
+.step-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.step-button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.step-button.disabled {
+  background-color: #e5e7eb;
+  color: #6b7280;
+  cursor: default;
+}
+
+.step-button.active {
+  background-color: #bfdbfe;
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.step-button.active:hover {
+  background-color: #93c5fd;
+}

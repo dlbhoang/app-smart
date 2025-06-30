@@ -8,6 +8,11 @@ import SmartWriterPage from "./pages/SmartWritePage";
 import NotFound from "./pages/NotFound";
 import DisclaimerPage from './pages/DisclaimerPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import ProfilePage from "./components/Profile";
+import ChangePasswordPage from "./components/ChangePassword";
+import OrdersPage from "./pages/OrdersPage";
+import ArticleResult from "./pages/ArticleResult";
+
 const App = () => {
   return (
     <Router>
@@ -15,7 +20,12 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+  <Route path="/change-password" element={<ChangePasswordPage />} />
         <Route path="/smart-writer" element={<SmartWriterPage />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/ai-writer/result" element={<ArticleResult />} />
+
         <Route path="*" element={<NotFound />} />
         <Route path="/disclaimer" element={<DisclaimerPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />

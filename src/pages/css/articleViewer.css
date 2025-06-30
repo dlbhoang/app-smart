@@ -1,0 +1,76 @@
+.article-viewer {
+  padding: 32px;
+  max-width: 900px;
+  margin: auto;
+  background-color: #ffffff;
+  font-family: Arial, sans-serif;
+  color: #111827;
+  line-height: 1.7;
+}
+
+.article-viewer h1 {
+  font-size: 28px;
+  color: #1e40af;
+  margin-bottom: 16px;
+}
+
+.article-meta {
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: #6b7280;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.article-content h2 {
+  font-size: 22px;
+  margin-top: 28px;
+  margin-bottom: 12px;
+  color: #2563eb;
+}
+
+.article-content h3 {
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #374151;
+}
+
+.article-content p {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.back-btn {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.txt-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.pdf-btn {
+  background-color: #10b981;
+  color: white;
+}

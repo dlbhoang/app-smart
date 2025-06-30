@@ -1,0 +1,143 @@
+/* Container chính */
+.step-seven-container {
+  width: 100vw;
+  padding: 32px;
+  font-family: Arial, sans-serif;
+  background: #f9fafb;
+  min-height: 100vh;
+  box-sizing: border-box;
+  color: #000;
+}
+
+/* Từ khóa */
+.step-seven-keyword {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Tiêu đề bước */
+.step-seven-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #2563eb;
+}
+
+/* Label chung */
+.step-seven-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  color: #000;
+}
+
+/* Input và select */
+.step-seven-input,
+.step-seven-select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #000;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+/* Textarea */
+.step-seven-textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #000;
+  font-size: 14px;
+  font-family: monospace;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+/* Checkbox */
+.step-seven-checkbox-group {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.step-seven-checkbox-group label {
+  color: #000;
+  font-size: 14px;
+}
+
+/* Vị trí chèn từ khóa */
+.step-seven-keyword-position {
+  margin-bottom: 30px;
+}
+
+.step-seven-keyword-position button {
+  padding: 10px 16px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  background-color: #e5e7eb;
+  color: #111827;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.step-seven-keyword-position button.active {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+/* Nút gửi */
+.step-seven-submit-button {
+  background-color: #2563eb;
+  color: white;
+  font-weight: bold;
+  padding: 14px 28px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.step-seven-submit-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Select wrapper (icon tam giác) */
+.step-seven-select-wrapper {
+  position: relative;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.step-seven-select {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1.5px solid #2563eb;
+  border-radius: 8px;
+  appearance: none;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.step-seven-select-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  width: 20px;
+  height: 20px;
+  fill: #2563eb;
+}

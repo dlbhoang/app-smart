@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaUserCircle } from "react-icons/fa";
 import LoginModal from "./LoginModal";
 import "./css/header.css";
 
 const Header = () => {
   const location = useLocation();
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const navigate = useNavigate();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const menuItems = [
     { id: "smart-writer", label: "AI WRITER" },
@@ -17,6 +23,24 @@ const Header = () => {
   const handleLogoClick = () => {
     navigate("/");
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setUser(null);
+    setShowDropdown(false);
+    navigate("/");
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest(".account-container")) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -38,18 +62,65 @@ const Header = () => {
                 to={`/${id}`}
                 className={`nav-link ${isActive ? "active" : ""}`}
               >
-                {first} {second && <span className="highlight"> {second}</span>}
+                {first} {second && <span className="highlight">{second}</span>}
               </Link>
             );
           })}
         </nav>
 
-        <button className="login-btn" onClick={() => setShowLoginModal(true)}>
-          Đăng nhập
-        </button>
+        <div className="auth-section">
+          {user ? (
+            <div className="account-container">
+              <FaUserCircle
+                size={28}
+                onClick={() => setShowDropdown(!showDropdown)}
+                style={{ cursor: "pointer" }}
+              />
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <p>👋 Xin chào, {user.name}</p>
+
+                  <button
+                    onClick={() => {
+                      setShowDropdown(false);
+                      navigate("/profile");
+                    }}
+                  >
+                    Thông tin tài khoản
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowDropdown(false);
+                      navigate("/orders");
+                    }}
+                  >
+                    Đơn hàng đã đặt
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    style={{ backgroundColor: "#f44336" }}
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button className="login-btn" onClick={() => setShowLoginModal(true)}>
+              Đăng nhập
+            </button>
+          )}
+        </div>
       </header>
 
-      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
+      {showLoginModal && (
+        <LoginModal
+          onClose={() => setShowLoginModal(false)}
+          setUser={setUser}
+        />
+      )}
     </>
   );
 };

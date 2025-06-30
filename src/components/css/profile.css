@@ -1,0 +1,193 @@
+.profile-container {
+  max-width: 550px;
+  margin: 60px auto;
+  padding: 30px 35px;
+  background: #f9fafc;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  font-family: "Segoe UI", sans-serif;
+  transition: all 0.3s ease;
+}
+
+.profile-container h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: #1976d2;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.profile-info p {
+  font-size: 16px;
+  margin: 12px 0;
+  color: #333;
+}
+
+.edit-form .form-group {
+  margin-bottom: 18px;
+}
+
+.edit-form label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+.edit-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border 0.2s;
+}
+
+.edit-form input:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 10px 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.edit-btn {
+  background: #1976d2;
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #145da0;
+}
+
+.save-btn {
+  background: #4caf50;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #3b9b44;
+}
+
+.cancel-btn {
+  background: #e53935;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #c62828;
+}
+.edit-form .error {
+  color: #e53935;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.password-form {
+  margin-top: 30px;
+  padding: 25px 30px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease-in-out;
+  border: 1px solid #e0e0e0;
+}
+
+.password-form h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #1976d2;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.password-form .form-group {
+  margin-bottom: 18px;
+}
+
+.password-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+.password-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border 0.2s ease-in-out;
+  font-size: 15px;
+}
+
+.password-form input:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+.password-form .action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.password-form .save-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  transition: background 0.2s ease-in-out;
+}
+
+.password-form .save-btn:hover {
+  background-color: #3b9b44;
+}
+
+.password-form .cancel-btn {
+  background-color: #e53935;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  transition: background 0.2s ease-in-out;
+}
+
+.password-form .cancel-btn:hover {
+  background-color: #c62828;
+}
+
+.password-form .error {
+  color: #e53935;
+  font-size: 14px;
+  margin-top: 6px;
+}

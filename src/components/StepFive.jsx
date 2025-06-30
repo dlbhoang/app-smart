@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function StepFive({ keyword = "ds", onNext }) {
   const [selectedOption, setSelectedOption] = useState("own");
@@ -25,6 +25,28 @@ export default function StepFive({ keyword = "ds", onNext }) {
       description: "Bạn sẽ nhập dữ liệu dưới dạng text cho AI",
     },
   ];
+
+  useEffect(() => {
+    const saved = localStorage.getItem("ai_writer_data");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.source_mode) {
+        setSelectedOption(parsed.source_mode);
+      }
+    }
+  }, []);
+
+  const handleNext = () => {
+    const saved = localStorage.getItem("ai_writer_data");
+    const parsed = saved ? JSON.parse(saved) : {};
+    const updated = {
+      ...parsed,
+      source_mode: selectedOption,
+    };
+    localStorage.setItem("ai_writer_data", JSON.stringify(updated));
+    console.log("📦 LocalStorage sau Bước 5:", updated);
+    onNext(selectedOption);
+  };
 
   return (
     <div
@@ -97,19 +119,19 @@ export default function StepFive({ keyword = "ds", onNext }) {
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", gap: 8 }}>
-            {[1, 2, 3, 4].map((num) => (
+            {[1, 2, 3, 4, 5].map((num) => (
               <div
                 key={num}
                 style={{
                   width: 36,
                   height: 36,
                   borderRadius: 8,
-                  backgroundColor: "#f3f4f6",
+                  backgroundColor: num === 5 ? "#2563eb" : "#f3f4f6",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   fontWeight: "600",
-                  color: "#374151",
+                  color: num === 5 ? "white" : "#374151",
                 }}
               >
                 {num}
@@ -118,7 +140,7 @@ export default function StepFive({ keyword = "ds", onNext }) {
           </div>
 
           <button
-            onClick={() => onNext(selectedOption)}
+            onClick={handleNext}
             style={{
               padding: "12px 20px",
               backgroundColor: "#2563eb",
@@ -133,14 +155,10 @@ export default function StepFive({ keyword = "ds", onNext }) {
               gap: 6,
             }}
           >
-            Next{" "}
-            <span style={{ display: "inline-block", animation: "spin 1s linear infinite" }}>
-              🔄
-            </span>
+            Next <span style={{ fontSize: 18 }}>➡️</span>
           </button>
         </div>
       </div>
     </div>
   );
-};
-
+}

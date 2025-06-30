@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const StepFour = ({ keyword = "trí tuệ nhân tạo", onNext }) => {
   const [selectedModel, setSelectedModel] = useState("chatgpt");
@@ -8,24 +8,73 @@ const StepFour = ({ keyword = "trí tuệ nhân tạo", onNext }) => {
   const [selectedTitle, setSelectedTitle] = useState(null);
   const perPage = 3;
 
+  useEffect(() => {
+    const saved = localStorage.getItem("ai_writer_data");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.title) {
+        setSelectedTitle(parsed.title);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("📦 LocalStorage:", localStorage.getItem("ai_writer_data"));
+  }, [selectedTitle]);
+
   const generateTitles = async () => {
     setLoading(true);
     setTitles([]);
     setSelectedTitle(null);
 
-    // Giả lập gọi API
-    setTimeout(() => {
-      const sampleTitles = Array.from({ length: 9 }, (_, i) => {
-        return `${keyword} - Tiêu đề gợi ý ${i + 1} (${selectedModel.toUpperCase()})`;
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch("https://server-hxhc.onrender.com/api/ai-writer/generate-titles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          keyword,
+          ai_model: selectedModel,
+        }),
       });
-      setTitles(sampleTitles);
+
+      const result = await response.json();
+
+      if (!response.ok || !result.titles) {
+        alert("❌ Lỗi: " + (result.message || result.error || "Không thể tạo tiêu đề."));
+        return;
+      }
+
+      setTitles(result.titles);
       setPage(1);
+    } catch (error) {
+      console.error("❌ Lỗi khi gọi API:", error);
+      alert("Đã xảy ra lỗi khi gọi API.");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   const titlesToShow = titles.slice((page - 1) * perPage, page * perPage);
   const totalPages = Math.ceil(titles.length / perPage);
+
+  const handleNext = () => {
+    if (selectedTitle) {
+      const saved = localStorage.getItem("ai_writer_data");
+      const parsed = saved ? JSON.parse(saved) : {};
+      const updated = {
+        ...parsed,
+        title: selectedTitle,
+        ai_model: selectedModel,
+      };
+      localStorage.setItem("ai_writer_data", JSON.stringify(updated));
+      onNext(selectedTitle);
+    }
+  };
 
   return (
     <div
@@ -51,7 +100,15 @@ const StepFour = ({ keyword = "trí tuệ nhân tạo", onNext }) => {
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         }}
       >
-        <h2 style={{ fontSize: 22, fontWeight: "800", color: "#111827", marginBottom: 20, textAlign: "center" }}>
+        <h2
+          style={{
+            fontSize: 22,
+            fontWeight: "800",
+            color: "#111827",
+            marginBottom: 20,
+            textAlign: "center",
+          }}
+        >
           Bước 4: Tạo tiêu đề bài viết
         </h2>
 
@@ -80,7 +137,10 @@ const StepFour = ({ keyword = "trí tuệ nhân tạo", onNext }) => {
           </label>
           <div style={{ display: "flex", gap: 16 }}>
             {["gemini", "chatgpt"].map((model) => (
-              <label key={model} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+              <label
+                key={model}
+                style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}
+              >
                 <input
                   type="radio"
                   value={model}
@@ -168,7 +228,7 @@ const StepFour = ({ keyword = "trí tuệ nhân tạo", onNext }) => {
               Tiêu đề đã chọn: <span style={{ fontWeight: "700" }}>{selectedTitle}</span>
             </p>
             <button
-              onClick={() => onNext(selectedTitle)}
+              onClick={handleNext}
               style={{
                 padding: "12px 24px",
                 backgroundColor: "#16a34a",

@@ -1,0 +1,116 @@
+.step-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.step-box {
+  max-width: 600px;
+  width: 100%;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.step-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #111827;
+}
+
+.step-label {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #374151;
+}
+
+.step-description {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #4b5563;
+}
+
+.step-input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.step-input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 2px solid #d1d5db;
+  font-size: 17px;
+  font-weight: 600;
+  color: #111827;
+  background-color: #fff;
+  caret-color: #2563eb;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 8px 2px rgba(37, 99, 235, 0.4) !important;
+}
+
+.step-helper {
+  margin-bottom: 25px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.step-link {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.step-select {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1.5px solid #d1d5db;
+  font-weight: 500;
+  color: #222;
+  background-color: #fff;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3e%3cpath fill='%233b82f6' d='M0 0l5 7 5-7z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 10px 7px;
+}
+
+.step-button {
+  margin-top: 35px;
+  width: 100%;
+  padding: 14px;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.step-button.hover {
+  background-color: #2563eb;
+}

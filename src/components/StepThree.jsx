@@ -5,6 +5,30 @@ const StepThree = ({ keyword = "ds", onNextStep }) => {
   const [manualOutline, setManualOutline] = useState("");
   const [gptSuggestion, setGptSuggestion] = useState("");
 
+  // Load dữ liệu từ localStorage khi mở component
+  useEffect(() => {
+    const saved = localStorage.getItem("ai_writer_data");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.outline_mode) {
+        setOutlineOption(parsed.outline_mode);
+      }
+      if (parsed.custom_outline) {
+        if (parsed.outline_mode === "manual") {
+          setManualOutline(parsed.custom_outline);
+        } else if (parsed.outline_mode === "gpt") {
+          setGptSuggestion(parsed.custom_outline);
+        }
+      }
+    }
+  }, []);
+
+  // 🔍 In ra dữ liệu trong localStorage để debug
+  useEffect(() => {
+    const saved = localStorage.getItem("ai_writer_data");
+    console.log("📦 Dữ liệu trong localStorage:", saved ? JSON.parse(saved) : "Không có");
+  }, []);
+
   const handleChange = (e) => {
     setOutlineOption(e.target.value);
   };
@@ -15,17 +39,27 @@ const StepThree = ({ keyword = "ds", onNextStep }) => {
 
   const handleNext = () => {
     if (outlineOption) {
-      const result =
+      const data =
         outlineOption === "manual"
           ? { option: "manual", outline: manualOutline }
           : outlineOption === "gpt"
           ? { option: "gpt", outline: gptSuggestion }
           : { option: outlineOption };
-      onNextStep?.(result);
+
+      // ✅ Lưu vào localStorage
+      const saved = localStorage.getItem("ai_writer_data");
+      const parsed = saved ? JSON.parse(saved) : {};
+      const updated = {
+        ...parsed,
+        outline_mode: data.option,
+        custom_outline: data.outline || "",
+      };
+      localStorage.setItem("ai_writer_data", JSON.stringify(updated));
+
+      onNextStep?.(data);
     }
   };
 
-  // Tạo gợi ý mẫu nếu chọn GPT
   useEffect(() => {
     if (outlineOption === "gpt") {
       setGptSuggestion(
@@ -35,12 +69,26 @@ const StepThree = ({ keyword = "ds", onNextStep }) => {
   }, [outlineOption, keyword]);
 
   const options = [
-    { label: "Không cần dàn ý, viết theo từ khóa - Bài viết sẽ dài khoảng 1,000 - 1,500 từ", value: "none" },
+    {
+      label: "Không cần dàn ý, viết theo từ khóa - Bài viết sẽ dài khoảng 1,000 - 1,500 từ",
+      value: "none",
+    },
     { label: "Bạn sẽ nhập dàn ý theo ý bạn", value: "manual" },
     { label: "Clone Outline: Copy dàn ý (h2, h3) từ 1 website URL", value: "clone" },
-    { label: "Sử dụng AI (chatGPT): Công nghệ của OpenAI tạo dàn ý văn phong mượt mà", value: "gpt" },
-    { label: "Sử dụng AI (Bard): Công nghệ của Google AI tạo dàn ý hợp với các nội dung mới", value: "bard" },
-    { label: "Input & AI: Tùy chọn nâng cao, dùng AI xây dựng dàn ý chi tiết và đúng mục tiêu hơn", value: "input_ai", isPro: true },
+    {
+      label: "Sử dụng AI (chatGPT): Công nghệ của OpenAI tạo dàn ý văn phong mượt mà",
+      value: "gpt",
+    },
+    {
+      label: "Sử dụng AI (Bard): Công nghệ của Google AI tạo dàn ý hợp với các nội dung mới",
+      value: "bard",
+    },
+    {
+      label:
+        "Input & AI: Tùy chọn nâng cao, dùng AI xây dựng dàn ý chi tiết và đúng mục tiêu hơn",
+      value: "input_ai",
+      isPro: true,
+    },
   ];
 
   return (
@@ -67,18 +115,18 @@ const StepThree = ({ keyword = "ds", onNextStep }) => {
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         }}
       >
-        <h2 style={{ fontSize: 22, fontWeight: "800", color: "#111827", marginBottom: 20 }}>
+        <h2
+          style={{
+            fontSize: 22,
+            fontWeight: "800",
+            color: "#111827",
+            marginBottom: 20,
+          }}
+        >
           Từ khóa: <span style={{ color: "#2563eb" }}>{keyword}</span>
         </h2>
 
-        <div
-          style={{
-            fontWeight: "700",
-            fontSize: 18,
-            marginBottom: 10,
-            color: "#374151",
-          }}
-        >
+        <div style={{ fontWeight: "700", fontSize: 18, marginBottom: 10, color: "#374151" }}>
           Bước 3:
         </div>
         <div style={{ fontSize: 16, marginBottom: 20, color: "#4b5563" }}>
@@ -130,10 +178,11 @@ const StepThree = ({ keyword = "ds", onNextStep }) => {
           ))}
         </div>
 
-        {/* Nếu chọn manual thì hiển thị textarea nhập tay */}
         {outlineOption === "manual" && (
           <div style={{ marginTop: 20 }}>
-            <label style={{ fontWeight: "600", color: "#374151", display: "block", marginBottom: 8 }}>
+            <label
+              style={{ fontWeight: "600", color: "#374151", display: "block", marginBottom: 8 }}
+            >
               Nhập dàn ý của bạn:
             </label>
             <textarea
@@ -156,26 +205,28 @@ const StepThree = ({ keyword = "ds", onNextStep }) => {
 
         {outlineOption === "gpt" && (
           <div style={{ marginTop: 20 }}>
-            <label style={{ fontWeight: "600", color: "#374151", display: "block", marginBottom: 8 }}>
+            <label
+              style={{ fontWeight: "600", color: "#374151", display: "block", marginBottom: 8 }}
+            >
               Gợi ý dàn ý từ AI:
             </label>
-           <textarea
-  rows={6}
-  value={gptSuggestion}
-  onChange={(e) => setGptSuggestion(e.target.value)}
-  style={{
-    width: "100%",
-    padding: 12,
-    fontSize: 17,
-    fontWeight: "600",
-    color: "#000000",
-    borderRadius: 8,
-    border: "1px solid #d1d5db",
-    resize: "vertical",
-    fontFamily: "inherit",
-    backgroundColor: "#f3f4f6",
-  }}
-/>
+            <textarea
+              rows={6}
+              value={gptSuggestion}
+              onChange={(e) => setGptSuggestion(e.target.value)}
+              style={{
+                width: "100%",
+                padding: 12,
+                fontSize: 17,
+                fontWeight: "600",
+                color: "#000000",
+                borderRadius: 8,
+                border: "1px solid #d1d5db",
+                resize: "vertical",
+                fontFamily: "inherit",
+                backgroundColor: "#f3f4f6",
+              }}
+            />
           </div>
         )}
 
