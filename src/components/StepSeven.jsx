@@ -38,67 +38,73 @@ const StepSeven = ({ keyword = "trí tuệ nhân tạo", onWritePost }) => {
   }, []);
 
   const handleWritePost = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Vui lòng đăng nhập để sử dụng chức năng viết bài.");
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Vui lòng đăng nhập để sử dụng chức năng viết bài.");
+    return;
+  }
+
+  const stored = localStorage.getItem("ai_writer_data");
+  const parsed = stored ? JSON.parse(stored) : {};
+  const stepSeven = parsed.stepSeven || {};
+
+  const aiModelMapped =
+    stepSeven.aiModel === "Claude 3 Opus: Tự nhiên như người thật ✨"
+      ? "claude"
+      : typeof stepSeven.aiModel === "string" && stepSeven.aiModel.includes("4.5")
+      ? "gpt-4.5"
+      : "gpt-4";
+
+  const body = {
+    main_keyword: parsed.stepOne?.keyword || keyword,
+    sub_keywords: parsed.stepTwo?.subKeywords || [],
+    outline_mode: "auto",
+    title_mode: "auto",
+    source_mode: "builtin",
+    semantic_keywords: parsed.stepFour?.semanticKeywords || [],
+    ai_model: aiModelMapped,
+    bold_keywords: stepSeven.boldMainKeyword || false,
+    add_conclusion: !!stepSeven.finalParagraph,
+    add_internal_links: !!stepSeven.keywordLinks,
+    ...(stepSeven.selectedWebsite && { website: stepSeven.selectedWebsite }),
+  };
+
+  // 👉 Chuyển sang trang kết quả trước với trạng thái loading
+  navigate("/ai-writer/result", {
+    state: {
+      loading: true,
+      keyword,
+    },
+  });
+
+  try {
+    const response = await fetch("https://server-hxhc.onrender.com/api/ai-writer/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || result.message !== "Viết bài thành công!") {
+      alert("❌ Lỗi: " + (result.message || result.error));
       return;
     }
 
-    const stored = localStorage.getItem("ai_writer_data");
-    const parsed = stored ? JSON.parse(stored) : {};
-    const stepSeven = parsed.stepSeven || {};
+    // ✅ Gửi lại kết quả sang ArticleResult bằng navigate + replace
+    navigate("/ai-writer/result", {
+      replace: true,
+      state: { article: result.article },
+    });
+  } catch (err) {
+    console.error("❌ Lỗi:", err);
+    alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+  }
+};
 
-    const aiModelMapped =
-      stepSeven.aiModel === "Claude 3 Opus: Tự nhiên như người thật ✨"
-        ? "claude"
-: typeof stepSeven.aiModel === "string" && stepSeven.aiModel.includes("4.5")
-        ? "gpt-4.5"
-        : "gpt-4";
-
-    const body = {
-      main_keyword: parsed.stepOne?.keyword || keyword,
-      sub_keywords: parsed.stepTwo?.subKeywords || [],
-      outline_mode: "auto",
-      title_mode: "auto",
-      source_mode: "builtin",
-      semantic_keywords: parsed.stepFour?.semanticKeywords || [],
-      ai_model: aiModelMapped,
-      bold_keywords: stepSeven.boldMainKeyword || false,
-      add_conclusion: !!stepSeven.finalParagraph,
-      add_internal_links: !!stepSeven.keywordLinks,
-      ...(stepSeven.selectedWebsite && { website: stepSeven.selectedWebsite }), // chỉ thêm nếu có
-    };
-
-    console.log("📤 Payload gửi đi:", body);
-
-    try {
-      setIsLoading(true);
-      const response = await fetch("https://server-hxhc.onrender.com/api/ai-writer/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || result.message !== "Viết bài thành công!") {
-        alert("❌ Lỗi: " + (result.message || result.error));
-        return;
-      }
-
-      alert("✅ Viết bài thành công!");
-      onWritePost?.(result.article);
-      navigate("/ai-writer/result", { state: { article: result.article } });
-    } catch (error) {
-      console.error("❌ Lỗi gửi API:", error);
-      alert("Đã xảy ra lỗi khi gửi yêu cầu.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const labelStyle = {
     fontWeight: 600,
@@ -164,29 +170,7 @@ const StepSeven = ({ keyword = "trí tuệ nhân tạo", onWritePost }) => {
       </div>
 
       {/* Liên kết từ khoá */}
-      <div style={{ marginBottom: 20 }}>
-        <label style={labelStyle}>Liên kết cho từ khoá (Tùy chọn)</label>
-        <textarea
-          rows={4}
-          value={keywordLinks}
-          onChange={(e) => setKeywordLinks(e.target.value)}
-          placeholder="TừKhoá_1|https://link1.com\nTừKhoá_2|https://link2.com"
-          style={{ ...inputStyle, fontFamily: "monospace" }}
-        />
-      </div>
-
-      {/* Đoạn kết */}
-      <div style={{ marginBottom: 20 }}>
-        <label style={labelStyle}>Đoạn kết bài viết (tuỳ chọn)</label>
-        <textarea
-          rows={3}
-          value={finalParagraph}
-          onChange={(e) => setFinalParagraph(e.target.value)}
-          placeholder="Cảm ơn bạn đã đọc bài viết!"
-          style={inputStyle}
-        />
-      </div>
-
+     
       {/* Tùy chọn in đậm */}
       <div style={{ marginBottom: 20 }}>
         <label style={labelStyle}>Tùy chọn in đậm</label>

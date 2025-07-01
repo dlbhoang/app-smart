@@ -26,3 +26,11 @@
   padding: 40px;
   color: #ef4444;
 }
+
+
+.no-data {
+  padding: 80px;
+  text-align: center;
+  font-size: 20px;
+  color: #dc2626;
+}
