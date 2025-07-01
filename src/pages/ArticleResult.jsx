@@ -11,11 +11,11 @@ const ArticleResult = () => {
 
   const [displayedText, setDisplayedText] = useState("");
   const [typingDone, setTypingDone] = useState(false);
+  const [wordCount, setWordCount] = useState(0);
 
   useEffect(() => {
     if (!article?.content) return;
 
-    // Làm sạch và định dạng nội dung
     const cleanedHTML = article.content
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/#/g, "")
@@ -24,10 +24,17 @@ const ArticleResult = () => {
       .join("");
 
     let index = 0;
-    const speed = 5; // tốc độ chạy chữ (ms mỗi ký tự)
+    const speed = 5;
 
     const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + cleanedHTML[index]);
+      setDisplayedText((prev) => {
+        const nextText = prev + cleanedHTML[index];
+        const textWithoutTags = nextText.replace(/<[^>]+>/g, " ");
+        const words = textWithoutTags.trim().split(/\s+/).filter(Boolean);
+        setWordCount(words.length);
+        return nextText;
+      });
+
       index++;
       if (index >= cleanedHTML.length) {
         clearInterval(interval);
@@ -42,11 +49,7 @@ const ArticleResult = () => {
     return (
       <>
         <Header />
-        <div style={{
-          textAlign: "center",
-          padding: "100px 20px",
-          fontFamily: "'Arial', sans-serif",
-        }}>
+        <div style={{ textAlign: "center", padding: "100px 20px", fontFamily: "'Arial', sans-serif" }}>
           <h2 style={{ fontSize: 24 }}>🧠 Đang tạo bài viết cho từ khoá:</h2>
           <h1 style={{ fontSize: 32, color: "#2563eb", margin: "20px 0" }}>{keyword}</h1>
           <p style={{ fontSize: 16, color: "#555" }}>Vui lòng chờ trong giây lát...</p>
@@ -87,7 +90,7 @@ const ArticleResult = () => {
           style={{
             fontSize: "30px",
             fontWeight: "bold",
-            marginBottom: "30px",
+            marginBottom: "20px",
             textAlign: "center",
             color: "#2563eb",
           }}
@@ -95,10 +98,12 @@ const ArticleResult = () => {
           {article.title?.replace(/^(\d+\.\s)/, "")}
         </h1>
 
-        <div
-          className="article-body"
-          dangerouslySetInnerHTML={{ __html: displayedText }}
-        />
+        {/* 👇 Số từ đã hiển thị */}
+        <p style={{ textAlign: "center", fontStyle: "italic", fontSize: "15px", marginBottom: 20 }}>
+          {typingDone ? `Tổng số từ: ${wordCount}` : `Đã hiển thị: ${wordCount} từ...`}
+        </p>
+
+        <div className="article-body" dangerouslySetInnerHTML={{ __html: displayedText }} />
 
         {typingDone && (
           <>
@@ -112,13 +117,7 @@ const ArticleResult = () => {
                 color: "#555",
               }}
             >
-              <span>
-                Ngày tạo:{" "}
-                {article.created_at
-                  ? new Date(article.created_at).toLocaleDateString("vi-VN")
-                  : "Không rõ"}
-              </span>
-              <span>Tác giả: {article.author || "Không rõ"}</span>
+              
             </div>
           </>
         )}
