@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const StepSeven = ({ keyword = "trí tuệ nhân tạo", onWritePost }) => {
-  const [aiModel, setAiModel] = useState("ChatGPT 4.1 MINI: AI viết 1 lần = 1 post 🔥🧠");
+  const [aiModel, setAiModel] = useState("gpt-4");
   const [selectedWebsite, setSelectedWebsite] = useState("");
   const [keywordLinks, setKeywordLinks] = useState("");
   const [finalParagraph, setFinalParagraph] = useState("");
   const [boldMainKeyword, setBoldMainKeyword] = useState(false);
   const [boldHeadings, setBoldHeadings] = useState(false);
   const [position, setPosition] = useState(null);
+  const [wordCount, setWordCount] = useState(1000);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -25,86 +26,115 @@ const StepSeven = ({ keyword = "trí tuệ nhân tạo", onWritePost }) => {
           boldMainKeyword,
           boldHeadings,
           position,
+          wordCount,
         } = parsed.stepSeven;
-        setAiModel(aiModel || "");
+        setAiModel(aiModel || "gpt-4");
         setSelectedWebsite(selectedWebsite || "");
         setKeywordLinks(keywordLinks || "");
         setFinalParagraph(finalParagraph || "");
         setBoldMainKeyword(boldMainKeyword || false);
         setBoldHeadings(boldHeadings || false);
         setPosition(position || null);
+        setWordCount(wordCount || 1000);
       }
     }
   }, []);
 
+  useEffect(() => {
+    const saved = localStorage.getItem("ai_writer_data");
+    const parsed = saved ? JSON.parse(saved) : {};
+    parsed.stepSeven = {
+      aiModel,
+      selectedWebsite,
+      keywordLinks,
+      finalParagraph,
+      boldMainKeyword,
+      boldHeadings,
+      position,
+      wordCount,
+    };
+    localStorage.setItem("ai_writer_data", JSON.stringify(parsed));
+  }, [
+    aiModel,
+    selectedWebsite,
+    keywordLinks,
+    finalParagraph,
+    boldMainKeyword,
+    boldHeadings,
+    position,
+    wordCount,
+  ]);
+
   const handleWritePost = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    alert("Vui lòng đăng nhập để sử dụng chức năng viết bài.");
-    return;
-  }
-
-  const stored = localStorage.getItem("ai_writer_data");
-  const parsed = stored ? JSON.parse(stored) : {};
-  const stepSeven = parsed.stepSeven || {};
-
-  const aiModelMapped =
-    stepSeven.aiModel === "Claude 3 Opus: Tự nhiên như người thật ✨"
-      ? "claude"
-      : typeof stepSeven.aiModel === "string" && stepSeven.aiModel.includes("4.5")
-      ? "gpt-4.5"
-      : "gpt-4";
-
-  const body = {
-    main_keyword: parsed.stepOne?.keyword || keyword,
-    sub_keywords: parsed.stepTwo?.subKeywords || [],
-    outline_mode: "auto",
-    title_mode: "auto",
-    source_mode: "builtin",
-    semantic_keywords: parsed.stepFour?.semanticKeywords || [],
-    ai_model: aiModelMapped,
-    bold_keywords: stepSeven.boldMainKeyword || false,
-    add_conclusion: !!stepSeven.finalParagraph,
-    add_internal_links: !!stepSeven.keywordLinks,
-    ...(stepSeven.selectedWebsite && { website: stepSeven.selectedWebsite }),
-  };
-
-  // 👉 Chuyển sang trang kết quả trước với trạng thái loading
-  navigate("/ai-writer/result", {
-    state: {
-      loading: true,
-      keyword,
-    },
-  });
-
-  try {
-    const response = await fetch("https://server-hxhc.onrender.com/api/ai-writer/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(body),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok || result.message !== "Viết bài thành công!") {
-      alert("❌ Lỗi: " + (result.message || result.error));
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Vui lòng đăng nhập để sử dụng chức năng viết bài.");
       return;
     }
 
-    // ✅ Gửi lại kết quả sang ArticleResult bằng navigate + replace
-    navigate("/ai-writer/result", {
-      replace: true,
-      state: { article: result.article },
-    });
-  } catch (err) {
-    console.error("❌ Lỗi:", err);
-    alert("Đã xảy ra lỗi khi gửi yêu cầu.");
-  }
-};
+    const stored = localStorage.getItem("ai_writer_data");
+    const parsed = stored ? JSON.parse(stored) : {};
+    const stepSeven = parsed.stepSeven || {};
 
+    const body = {
+      main_keyword: parsed.stepOne?.keyword || keyword,
+      sub_keywords: parsed.stepTwo?.subKeywords || [],
+      outline_mode: "auto",
+      title_mode: "auto",
+      source_mode: "builtin",
+      semantic_option: parsed.stepFour?.semanticOption || "skip",
+      semantic_keywords: parsed.stepFour?.semanticKeywords || [],
+      word_count: stepSeven.wordCount || 1000,
+      stepSeven: {
+        aiModel: stepSeven.aiModel || "gpt-4",
+        boldMainKeyword: stepSeven.boldMainKeyword || false,
+        boldHeadings: stepSeven.boldHeadings || false,
+        position: stepSeven.position || null,
+        keywordLinks: stepSeven.keywordLinks || "",
+        finalParagraph: stepSeven.finalParagraph || "",
+        selectedWebsite: stepSeven.selectedWebsite || "",
+      },
+    };
+
+    navigate("/ai-writer/result", {
+      state: {
+        loading: true,
+        keyword,
+      },
+    });
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        "https://server-hxhc.onrender.com/api/ai-writer/generate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || result.message !== "Viết bài thành công!") {
+        alert("❌ Lỗi: " + (result.message || result.error));
+        return;
+      }
+
+      navigate("/ai-writer/result", {
+        replace: true,
+        state: { article: result.article },
+      });
+    } catch (err) {
+      console.error("❌ Lỗi:", err);
+      alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const labelStyle = {
     fontWeight: 600,
@@ -142,20 +172,31 @@ const StepSeven = ({ keyword = "trí tuệ nhân tạo", onWritePost }) => {
       </p>
 
       <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 24 }}>
-        <span style={{ color: "#2563eb" }}>Bước 7:</span> Cấu hình và viết bài bằng AI
+        <span style={{ color: "#2563eb" }}>Bước 7:</span> Cấu hình và viết bài
+        bằng AI
       </h2>
 
       {/* Chọn Model */}
       <div style={{ marginBottom: 20 }}>
         <label style={labelStyle}>Chọn công cụ AI</label>
-        <select value={aiModel} onChange={(e) => setAiModel(e.target.value)} style={inputStyle}>
-          <option>ChatGPT 4.1 MINI: AI viết 1 lần = 1 post 🔥🧠</option>
-          <option>ChatGPT 4.5 Turbo: Viết dài, chi tiết hơn 🧠</option>
-          <option>Claude 3 Opus: Tự nhiên như người thật ✨</option>
+        <select
+          value={aiModel}
+          onChange={(e) => setAiModel(e.target.value)}
+          style={inputStyle}
+        >
+          <option value="gpt-4">
+            ChatGPT 4.1 MINI: AI viết 1 lần = 1 post 🔥🧠
+          </option>
+          <option value="gpt-4.5">
+            ChatGPT 4.5 Turbo: Viết dài, chi tiết hơn 🧠
+          </option>
+          <option value="claude">
+            Claude 3 Opus: Tự nhiên như người thật ✨
+          </option>
         </select>
       </div>
 
-      {/* Website đăng (tuỳ chọn) */}
+      {/* Website đăng */}
       <div style={{ marginBottom: 20 }}>
         <label style={labelStyle}>Chọn trang web để đăng (tuỳ chọn)</label>
         <select
@@ -169,8 +210,24 @@ const StepSeven = ({ keyword = "trí tuệ nhân tạo", onWritePost }) => {
         </select>
       </div>
 
-      {/* Liên kết từ khoá */}
-     
+      {/* Số lượng từ */}
+      <div style={{ marginBottom: 20 }}>
+        <label style={labelStyle}>Số lượng từ mong muốn</label>
+        <select
+          value={wordCount}
+          onChange={(e) => setWordCount(parseInt(e.target.value))}
+          style={inputStyle}
+        >
+          <option value={500}>500 từ</option>
+          <option value={1000}>1000 từ</option>
+          <option value={1500}>1500 từ</option>
+          <option value={2000}>2000 từ</option>
+        </select>
+        <p style={{ fontSize: 13, color: "#555", marginTop: 8 }}>
+          📌 Mỗi 1 từ = 1 credit. Bạn sẽ bị trừ {wordCount} credits.
+        </p>
+      </div>
+
       {/* Tùy chọn in đậm */}
       <div style={{ marginBottom: 20 }}>
         <label style={labelStyle}>Tùy chọn in đậm</label>
