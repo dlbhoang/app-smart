@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
+import html2pdf from "html2pdf.js";
 import "./css/ArticleResult.css";
 
 const ArticleResult = () => {
@@ -33,7 +34,7 @@ const ArticleResult = () => {
       if (index >= cleanedHTML.length) {
         clearInterval(interval);
         setTypingDone(true);
-        setEditedContent(cleanedHTML); // Lưu để chỉnh sửa
+        setEditedContent(cleanedHTML);
         return;
       }
 
@@ -80,6 +81,20 @@ const ArticleResult = () => {
     }, 0);
   };
 
+  const handleDownloadPDF = () => {
+    const element = document.getElementById("article-content");
+
+    const opt = {
+      margin: 0.5,
+      filename: `${article.title || "article"}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+    };
+
+    html2pdf().set(opt).from(element).save();
+  };
+
   if (loading) {
     return (
       <>
@@ -108,6 +123,7 @@ const ArticleResult = () => {
     <>
       <Header />
       <div
+        id="article-content"
         style={{
           maxWidth: "850px",
           margin: "40px auto",
@@ -137,7 +153,6 @@ const ArticleResult = () => {
           {typingDone ? `Tổng số từ: ${wordCount}` : `Đã hiển thị: ${wordCount} từ...`}
         </p>
 
-        {/* 👇 Nội dung bài viết */}
         {!isEditing ? (
           <div className="article-body" dangerouslySetInnerHTML={{ __html: displayedText }} />
         ) : (
@@ -205,24 +220,28 @@ const ArticleResult = () => {
               <span>✅ Đã hiển thị toàn bộ nội dung</span>
               <div>
                 {!isEditing ? (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    style={{
-                      padding: "8px 16px",
-                      borderRadius: "6px",
-                      backgroundColor: "#2563eb",
-                      color: "#fff",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                  >
-                    ✏️ Chỉnh sửa bài viết
-                  </button>
+                  <>
+                   
+                    <button
+                      onClick={handleDownloadPDF}
+                      style={{
+                        marginLeft: "12px",
+                        padding: "8px 16px",
+                        borderRadius: "6px",
+                        backgroundColor: "#f59e0b",
+                        color: "#fff",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      📄 Tải PDF
+                    </button>
+                  </>
                 ) : (
                   <button
                     onClick={() => {
                       setIsEditing(false);
-                      setDisplayedText(editedContent); // cập nhật lại nội dung đã chỉnh sửa
+                      setDisplayedText(editedContent);
                     }}
                     style={{
                       padding: "8px 16px",
