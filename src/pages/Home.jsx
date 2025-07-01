@@ -6,7 +6,6 @@ const Home = () => {
   return (
     <div className="bg-white text-gray-800">
       <Header />
-
       <HeroSection />
       <Footer/>
     </div>

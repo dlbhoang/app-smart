@@ -10,7 +10,8 @@ const StepSeven = ({ keyword = "trí tuệ nhân tạo", onWritePost }) => {
   const [boldHeadings, setBoldHeadings] = useState(false);
   const [position, setPosition] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const saved = localStorage.getItem("ai_writer_data");
     if (saved) {
@@ -50,7 +51,7 @@ const navigate = useNavigate();
     const aiModelMapped =
       stepSeven.aiModel === "Claude 3 Opus: Tự nhiên như người thật ✨"
         ? "claude"
-        : stepSeven.aiModel.includes("4.5")
+        : (stepSeven.aiModel || "").includes("4.5")
         ? "gpt-4.5"
         : "gpt-4";
 
@@ -65,6 +66,7 @@ const navigate = useNavigate();
       bold_keywords: stepSeven.boldMainKeyword || false,
       add_conclusion: !!stepSeven.finalParagraph,
       add_internal_links: !!stepSeven.keywordLinks,
+      ...(stepSeven.selectedWebsite && { website: stepSeven.selectedWebsite }), // chỉ thêm nếu có
     };
 
     console.log("📤 Payload gửi đi:", body);
@@ -89,10 +91,7 @@ const navigate = useNavigate();
 
       alert("✅ Viết bài thành công!");
       onWritePost?.(result.article);
-
-      // 👉 Điều hướng tới trang kết quả và truyền dữ liệu bài viết
       navigate("/ai-writer/result", { state: { article: result.article } });
-
     } catch (error) {
       console.error("❌ Lỗi gửi API:", error);
       alert("Đã xảy ra lỗi khi gửi yêu cầu.");
@@ -150,15 +149,15 @@ const navigate = useNavigate();
         </select>
       </div>
 
-      {/* Website đăng */}
+      {/* Website đăng (tuỳ chọn) */}
       <div style={{ marginBottom: 20 }}>
-        <label style={labelStyle}>Chọn trang web để đăng (Tùy chọn)</label>
+        <label style={labelStyle}>Chọn trang web để đăng (tuỳ chọn)</label>
         <select
           value={selectedWebsite}
           onChange={(e) => setSelectedWebsite(e.target.value)}
           style={inputStyle}
         >
-          <option value="">-- Chọn website để đăng --</option>
+          <option value="">-- Không chọn --</option>
           <option value="myblog.com">myblog.com</option>
           <option value="webmoi.vn">webmoi.vn</option>
         </select>
@@ -188,7 +187,7 @@ const navigate = useNavigate();
         />
       </div>
 
-      {/* In đậm */}
+      {/* Tùy chọn in đậm */}
       <div style={{ marginBottom: 20 }}>
         <label style={labelStyle}>Tùy chọn in đậm</label>
         <label style={{ marginRight: 24 }}>
@@ -211,7 +210,7 @@ const navigate = useNavigate();
         </label>
       </div>
 
-      {/* Vị trí từ khoá */}
+      {/* Vị trí chèn từ khoá */}
       <div style={{ marginBottom: 30 }}>
         <label style={labelStyle}>Vị trí chèn từ khoá in đậm (tuỳ chọn)</label>
         {[1, 2, 3, 4, 5, 6].map((n) => (
@@ -235,7 +234,6 @@ const navigate = useNavigate();
         ))}
       </div>
 
-      {/* Nút viết bài */}
       <button
         onClick={handleWritePost}
         disabled={isLoading}

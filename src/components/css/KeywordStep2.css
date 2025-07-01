@@ -100,3 +100,9 @@
 .step-button.active:hover {
   background-color: #93c5fd;
 }
+/* Trong KeywordStep2.css */
+.error-message {
+  color: red;
+  margin-top: 6px;
+  font-size: 0.9em;
+}
