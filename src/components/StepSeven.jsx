@@ -51,7 +51,7 @@ const StepSeven = ({ keyword = "trí tuệ nhân tạo", onWritePost }) => {
     const aiModelMapped =
       stepSeven.aiModel === "Claude 3 Opus: Tự nhiên như người thật ✨"
         ? "claude"
-        : (stepSeven.aiModel || "").includes("4.5")
+: typeof stepSeven.aiModel === "string" && stepSeven.aiModel.includes("4.5")
         ? "gpt-4.5"
         : "gpt-4";
 
