@@ -17,8 +17,9 @@ const ArticleResult = () => {
     if (!article?.content) return;
 
     const cleanedHTML = article.content
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/#/g, "")
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold markdown
+      .replace(/#/g, "") // Remove hashtags
+      .replace(/<>|<\/>/g, "") // Remove standalone <>
       .split(/\n{2,}/)
       .map((para) => `<p>${para.trim()}</p>`)
       .join("");
@@ -27,19 +28,24 @@ const ArticleResult = () => {
     const speed = 5;
 
     const interval = setInterval(() => {
-      setDisplayedText((prev) => {
-        const nextText = prev + cleanedHTML[index];
-        const textWithoutTags = nextText.replace(/<[^>]+>/g, " ");
-        const words = textWithoutTags.trim().split(/\s+/).filter(Boolean);
-        setWordCount(words.length);
-        return nextText;
-      });
-
-      index++;
       if (index >= cleanedHTML.length) {
         clearInterval(interval);
         setTypingDone(true);
+        return;
       }
+
+      const nextChar = cleanedHTML[index];
+      if (nextChar !== undefined) {
+        setDisplayedText((prev) => {
+          const nextText = prev + nextChar;
+          const textWithoutTags = nextText.replace(/<[^>]+>/g, " ");
+          const words = textWithoutTags.trim().split(/\s+/).filter(Boolean);
+          setWordCount(words.length);
+          return nextText;
+        });
+      }
+
+      index++;
     }, speed);
 
     return () => clearInterval(interval);
@@ -117,7 +123,9 @@ const ArticleResult = () => {
                 color: "#555",
               }}
             >
-              
+              {/* Bạn có thể thêm các thông tin bổ sung ở đây */}
+              <span>✅ Đã hiển thị toàn bộ nội dung</span>
+              <span>🔄 Cảm ơn bạn đã sử dụng!</span>
             </div>
           </>
         )}
