@@ -109,21 +109,34 @@ const KeywordStep2 = ({ mainKeyword = "", onNextStep }) => {
         </div>
 
         {keywordOption === "manual" && (
-          <div className="manual-keywords-box">
+          <div className="manual-keywords-box improved">
             <label htmlFor="manualKeywords" className="step-subheading">
-              Nhập từ khóa phụ (ngăn cách bằng dấu phẩy, tối đa 4):
+              Nhập từ khóa phụ (tối đa 4, cách nhau bằng dấu phẩy):
             </label>
-            <textarea
-              id="manualKeywords"
-              rows={3}
-              value={manualKeywords}
-              placeholder="ví dụ: học SEO, viết blog, công cụ nghiên cứu từ khóa..."
-              onChange={(e) => {
-                setManualKeywords(e.target.value);
-                setError("");
-              }}
-            ></textarea>
+            <div className="tag-input-wrapper">
+              <input
+                type="text"
+                className="tag-input"
+                value={manualKeywords}
+                placeholder="Ví dụ: học SEO, viết blog, nghiên cứu từ khóa..."
+                onChange={(e) => {
+                  setManualKeywords(e.target.value);
+                  setError("");
+                }}
+              />
+            </div>
             {error && <p className="error-message">{error}</p>}
+            <div className="preview-tags">
+              {manualKeywords
+                .split(",")
+                .map((k) => k.trim())
+                .filter((k) => k !== "")
+                .map((kw, index) => (
+                  <span key={index} className="tag-preview">
+                    {kw}
+                  </span>
+                ))}
+            </div>
           </div>
         )}
 
