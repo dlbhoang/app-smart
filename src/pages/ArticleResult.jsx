@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import "./css/ArticleResult.css";
@@ -12,14 +12,16 @@ const ArticleResult = () => {
   const [displayedText, setDisplayedText] = useState("");
   const [typingDone, setTypingDone] = useState(false);
   const [wordCount, setWordCount] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     if (!article?.content) return;
 
     const cleanedHTML = article.content
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold markdown
-      .replace(/#/g, "") // Remove hashtags
-      .replace(/<>|<\/>/g, "") // Remove standalone <>
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/#/g, "")
       .split(/\n{2,}/)
       .map((para) => `<p>${para.trim()}</p>`)
       .join("");
@@ -31,6 +33,7 @@ const ArticleResult = () => {
       if (index >= cleanedHTML.length) {
         clearInterval(interval);
         setTypingDone(true);
+        setEditedContent(cleanedHTML); // Lưu để chỉnh sửa
         return;
       }
 
@@ -50,6 +53,32 @@ const ArticleResult = () => {
 
     return () => clearInterval(interval);
   }, [article]);
+
+  const wrapSelection = (tag) => {
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const before = editedContent.substring(0, start);
+    const selected = editedContent.substring(start, end);
+    const after = editedContent.substring(end);
+
+    let wrapped = selected;
+
+    if (tag === "strong") {
+      wrapped = `<strong>${selected}</strong>`;
+    } else if (tag === "em") {
+      wrapped = `<em>${selected}</em>`;
+    }
+
+    const newText = before + wrapped + after;
+    setEditedContent(newText);
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + wrapped.length;
+    }, 0);
+  };
 
   if (loading) {
     return (
@@ -104,12 +133,62 @@ const ArticleResult = () => {
           {article.title?.replace(/^(\d+\.\s)/, "")}
         </h1>
 
-        {/* 👇 Số từ đã hiển thị */}
         <p style={{ textAlign: "center", fontStyle: "italic", fontSize: "15px", marginBottom: 20 }}>
           {typingDone ? `Tổng số từ: ${wordCount}` : `Đã hiển thị: ${wordCount} từ...`}
         </p>
 
-        <div className="article-body" dangerouslySetInnerHTML={{ __html: displayedText }} />
+        {/* 👇 Nội dung bài viết */}
+        {!isEditing ? (
+          <div className="article-body" dangerouslySetInnerHTML={{ __html: displayedText }} />
+        ) : (
+          <>
+            <div style={{ marginBottom: "10px" }}>
+              <button
+                onClick={() => wrapSelection("strong")}
+                style={{
+                  marginRight: "8px",
+                  padding: "6px 12px",
+                  fontWeight: "bold",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  backgroundColor: "#f0f0f0",
+                  cursor: "pointer",
+                }}
+              >
+                B
+              </button>
+              <button
+                onClick={() => wrapSelection("em")}
+                style={{
+                  padding: "6px 12px",
+                  fontStyle: "italic",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  backgroundColor: "#f0f0f0",
+                  cursor: "pointer",
+                }}
+              >
+                I
+              </button>
+            </div>
+
+            <textarea
+              ref={textareaRef}
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              style={{
+                width: "100%",
+                height: "400px",
+                fontSize: "16px",
+                fontFamily: "inherit",
+                padding: "12px",
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                resize: "vertical",
+              }}
+            />
+          </>
+        )}
 
         {typingDone && (
           <>
@@ -123,9 +202,41 @@ const ArticleResult = () => {
                 color: "#555",
               }}
             >
-              {/* Bạn có thể thêm các thông tin bổ sung ở đây */}
               <span>✅ Đã hiển thị toàn bộ nội dung</span>
-              <span>🔄 Cảm ơn bạn đã sử dụng!</span>
+              <div>
+                {!isEditing ? (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    style={{
+                      padding: "8px 16px",
+                      borderRadius: "6px",
+                      backgroundColor: "#2563eb",
+                      color: "#fff",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ✏️ Chỉnh sửa bài viết
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsEditing(false);
+                      setDisplayedText(editedContent); // cập nhật lại nội dung đã chỉnh sửa
+                    }}
+                    style={{
+                      padding: "8px 16px",
+                      borderRadius: "6px",
+                      backgroundColor: "#10b981",
+                      color: "#fff",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    💾 Lưu nội dung
+                  </button>
+                )}
+              </div>
             </div>
           </>
         )}
