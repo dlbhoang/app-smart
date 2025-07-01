@@ -82,7 +82,7 @@ const ArticleResult = () => {
   };
 
   const handleDownloadPDF = () => {
-    const element = document.getElementById("article-content");
+    const element = document.getElementById("article-content-pdf");
 
     const opt = {
       margin: 0.5,
@@ -99,10 +99,20 @@ const ArticleResult = () => {
     return (
       <>
         <Header />
-        <div style={{ textAlign: "center", padding: "100px 20px", fontFamily: "'Arial', sans-serif" }}>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "100px 20px",
+            fontFamily: "'Arial', sans-serif",
+          }}
+        >
           <h2 style={{ fontSize: 24 }}>🧠 Đang tạo bài viết cho từ khoá:</h2>
-          <h1 style={{ fontSize: 32, color: "#2563eb", margin: "20px 0" }}>{keyword}</h1>
-          <p style={{ fontSize: 16, color: "#555" }}>Vui lòng chờ trong giây lát...</p>
+          <h1 style={{ fontSize: 32, color: "#2563eb", margin: "20px 0" }}>
+            {keyword}
+          </h1>
+          <p style={{ fontSize: 16, color: "#555" }}>
+            Vui lòng chờ trong giây lát...
+          </p>
         </div>
       </>
     );
@@ -149,12 +159,24 @@ const ArticleResult = () => {
           {article.title?.replace(/^(\d+\.\s)/, "")}
         </h1>
 
-        <p style={{ textAlign: "center", fontStyle: "italic", fontSize: "15px", marginBottom: 20 }}>
-          {typingDone ? `Tổng số từ: ${wordCount}` : `Đã hiển thị: ${wordCount} từ...`}
+        <p
+          style={{
+            textAlign: "center",
+            fontStyle: "italic",
+            fontSize: "15px",
+            marginBottom: 20,
+          }}
+        >
+          {typingDone
+            ? `Tổng số từ: ${wordCount}`
+            : `Đã hiển thị: ${wordCount} từ...`}
         </p>
 
         {!isEditing ? (
-          <div className="article-body" dangerouslySetInnerHTML={{ __html: displayedText }} />
+          <div
+            className="article-body"
+            dangerouslySetInnerHTML={{ __html: displayedText }}
+          />
         ) : (
           <>
             <div style={{ marginBottom: "10px" }}>
@@ -220,23 +242,20 @@ const ArticleResult = () => {
               <span>✅ Đã hiển thị toàn bộ nội dung</span>
               <div>
                 {!isEditing ? (
-                  <>
-                   
-                    <button
-                      onClick={handleDownloadPDF}
-                      style={{
-                        marginLeft: "12px",
-                        padding: "8px 16px",
-                        borderRadius: "6px",
-                        backgroundColor: "#f59e0b",
-                        color: "#fff",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      📄 Tải PDF
-                    </button>
-                  </>
+                  <button
+                    onClick={handleDownloadPDF}
+                    style={{
+                      marginLeft: "12px",
+                      padding: "8px 16px",
+                      borderRadius: "6px",
+                      backgroundColor: "#f59e0b",
+                      color: "#fff",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    📄 Tải PDF
+                  </button>
                 ) : (
                   <button
                     onClick={() => {
@@ -259,6 +278,27 @@ const ArticleResult = () => {
             </div>
           </>
         )}
+      </div>
+
+      {/* ✅ Nội dung thuần dùng để xuất PDF (không chứa nút hoặc giao diện phụ) */}
+      <div id="article-content-pdf" style={{ display: "none" }}>
+        <div
+          style={{
+            fontFamily: "'Times New Roman', serif",
+            fontSize: "18px",
+            lineHeight: "1.8",
+            color: "#000",
+          }}
+        >
+          <h1 style={{ textAlign: "center", fontSize: "28px" }}>
+            {article.title?.replace(/^(\d+\.\s)/, "")}
+          </h1>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: editedContent || displayedText,
+            }}
+          />
+        </div>
       </div>
     </>
   );
